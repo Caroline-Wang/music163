@@ -1,0 +1,162 @@
+.topbar{
+    width:100%;
+    padding: 0 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #ffffff;
+}
+.topbar>.top-logo{
+    width:142px;
+    height:25px;
+    margin:20px 0;
+}
+.topbar>.download-app{
+    border: 1px solid inherit;
+    font-size: 15px;
+    height: 30px;
+    line-height: 30px;
+    padding:0 10px;
+    position: relative;
+}
+.topbar>.download-app::after{
+    content: '';
+    display: block;
+    position: absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    border:1px solid;
+    border-radius: 37.5%/100%;
+    transform-origin: top left;
+}
+@media screen and (-webkit-min-device-pixel-ratio: 2){
+    .topbar>.download-app::after{
+        width:200%;
+        height:200%;
+        transform: scale(.5);
+    }
+}
+@media screen and (-webkit-min-device-pixel-ratio: 3){
+    .topbar>.download-app::after{
+        width:300%;
+        height:300%;
+        transform: scale(.3333333);
+    }
+}
+
+.tabs{
+    width:100%;
+    display: flex;
+    justify-content: space-between;
+    text-align: center;
+    color: #333;
+    font-size: 15px;
+    background-color: #ffffff;
+    border-bottom: 1px solid #E9E9E9;
+}
+.tabs>li{
+    width:33.33333%;
+    line-height: 40px;
+}
+.tabs>li.tabs-active .txt-underline{
+    display: inline-block;
+    padding:0 5px;
+    vertical-align: bottom;
+    border-bottom: 2px solid ;
+    color: #D33A31;
+}
+.tabs-content{
+    margin-top: 109px;
+}
+.tabs-content .tabs-title{
+    font-size: 17px;
+    line-height: 20px;
+    padding-left: 9px;
+    margin-bottom: 14px;
+    position: relative;
+}
+
+.tabs-content .tabs-title::before{
+    content: '';
+    display: block;
+    position: absolute;
+    top:0;
+    left:0;
+    height: 100%;
+    width: 2px;
+    background-color: #D33A31;
+}
+.tabs-content>.tabs-recommend{
+    padding-top: 20px;
+    background-color: #FCFCFD;
+}
+.tabs-content>.tabs-recommend>.recommend-list>ul{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+.tabs-content>.tabs-recommend>.recommend-list>ul>li{
+    width:32.6%;
+    margin-bottom: 18px;
+    position: relative;
+}
+.tabs-content>.tabs-recommend>.recommend-list>ul>li .listen-acount{
+    background: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMiAyMCI+PGcgb3BhY2l0eT0iLjE1Ij48cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGZpbGw9IiMwNDAwMDAiIGQ9Im0yMiAxNi43NzdjMCAxLjIzMy0xLjEyMSAyLjIzMy0yLjUwNiAyLjIzMy0xLjM4NCAwLTIuNTA2LTEtMi41MDYtMi4yMzN2LTIuNTUzYzAtMS4yMzQgMS4xMjItMi4yMzMgMi41MDYtMi4yMzMuMTc0IDAgLjM0My4wMTcuNTA2LjA0NnYtMS4zN2gtLjAzM2MuMDE3LS4yMi4wMzMtLjQ0MS4wMzMtLjY2NiAwLTQuNDE4LTMuNTgyLTgtOC04LTQuNDE4IDAtOCAzLjU4Mi04IDggMCAuMjI1LjAxNi40NDYuMDM0LjY2NmgtLjAzNHYxLjM3Yy4xNjMtLjAyOS4zMzMtLjA0Ni41MDUtLjA0NiAxLjM4NCAwIDIuNTA2Ljk5OSAyLjUwNiAyLjIzM3YyLjU1M2MwIDEuMjMzLTEuMTIyIDIuMjMzLTIuNTA2IDIuMjMzcy0yLjUwNS0uOTk5LTIuNTA1LTIuMjMzdi0yLjU1M2MwLS4yNTguMDU5LS41MDEuMTQ4LS43My0uMDg1LS4xNDgtLjE0OC0uMzEtLjE0OC0uNDkzdi0yLjY2N2MwLS4wMjMuMDEyLS4wNDMuMDEzLS4wNjctLjAwNC0uMDg4LS4wMTMtLjE3Ni0uMDEzLS4yNjYgMC01LjUyMyA0LjQ3Ny0xMCAxMC0xMCA1LjUyMyAwIDEwIDQuNDc3IDEwIDEwIDAgLjA5LS4wMDkuMTc4LS4wMTQuMjY2LjAwMi4wMjQuMDE0LjA0NC4wMTQuMDY3djJjMCAuMzA2LS4xNDUuNTY5LS4zNi43NTMuMjI0LjMzNC4zNi43Mi4zNiAxLjEzOHYyLjU1MiIvPjwvZz48cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGZpbGw9IiNmZmYiIGQ9Im0yMCAxNi43NzdjMCAxLjIzMy0xLjEyMSAyLjIzMy0yLjUwNiAyLjIzMy0xLjM4NCAwLTIuNTA2LTEtMi41MDYtMi4yMzN2LTIuNTUzYzAtMS4yMzQgMS4xMjItMi4yMzMgMi41MDYtMi4yMzMuMTc0IDAgLjM0My4wMTcuNTA2LjA0NnYtMS4zN2gtLjAzM2MuMDE3LS4yMi4wMzMtLjQ0MS4wMzMtLjY2NiAwLTQuNDE4LTMuNTgyLTgtOC04LTQuNDE4IDAtOCAzLjU4Mi04IDggMCAuMjI1LjAxNi40NDYuMDM0LjY2NmgtLjAzNHYxLjM3Yy4xNjMtLjAyOS4zMzMtLjA0Ni41MDUtLjA0NiAxLjM4NCAwIDIuNTA2Ljk5OSAyLjUwNiAyLjIzM3YyLjU1M2MwIDEuMjMzLTEuMTIyIDIuMjMzLTIuNTA2IDIuMjMzcy0yLjUwNS0uOTk5LTIuNTA1LTIuMjMzdi0yLjU1M2MwLS4yNTguMDU5LS41MDEuMTQ4LS43My0uMDg1LS4xNDgtLjE0OC0uMzEtLjE0OC0uNDkzdi0yLjY2N2MwLS4wMjMuMDEyLS4wNDMuMDEzLS4wNjctLjAwNC0uMDg4LS4wMTMtLjE3Ni0uMDEzLS4yNjYgMC01LjUyMyA0LjQ3Ny0xMCAxMC0xMCA1LjUyMyAwIDEwIDQuNDc3IDEwIDEwIDAgLjA5LS4wMDkuMTc4LS4wMTQuMjY2LjAwMi4wMjQuMDE0LjA0NC4wMTQuMDY3djJjMCAuMzA2LS4xNDUuNTY5LS4zNi43NTMuMjI0LjMzNC4zNi43Mi4zNiAxLjEzOHYyLjU1MiIvPjwvc3ZnPg==) no-repeat;
+    background-size: 11px 13px;
+    font-size: 12px;
+    line-height: 1;
+    color: #ffffff;
+    padding-left: 13px;
+    position: absolute;
+    top:5px;
+    right: 5px;
+}
+.tabs-content>.tabs-recommend>.recommend-list>ul>li img{
+    width:100%;
+}
+.tabs-content>.tabs-recommend>.recommend-list>ul>li p{
+    font-size: 13px;
+    line-height:1.2;
+    padding:6px 2px 0 6px;
+}
+
+.tabs-content>.tabs-recommend>.newest-list{
+    margin-top: 32px;
+}
+.tabs-content>.tabs-recommend>.newest-list>ul{
+    padding-left: 9px;
+    margin-top: 6px;
+}
+.tabs-content>.tabs-recommend>.newest-list>ul>li{
+    position: relative;
+    padding-bottom: 9px;
+    border-bottom: 1px solid #F4F4F5;
+}
+.tabs-content>.tabs-recommend>.newest-list>ul>li .song-name{
+    font-size: 17px;
+    line-height:1;
+    margin:7px 0;
+}
+.tabs-content>.tabs-recommend>.newest-list>ul>li .song-infos{
+    font-size: 12px;
+    line-height:1;
+    color: #888;
+
+}
+.tabs-content>.tabs-recommend>.newest-list>ul>li .song-infos>.svg-icon-sq{
+    fill:#FE6F3A;
+}
+.tabs-content>.tabs-recommend>.newest-list>ul>li a.play-btn{
+    position: absolute;
+    top:50%;
+    transform: translateY(-50%);
+    right:10px;
+
+}
+.tabs-content>.tabs-recommend>.newest-list>ul>li a.play-btn>.svg-icon-play{
+    fill:#AAAAAA;
+    width:22px;
+    height: 22px;
+}
