@@ -22,7 +22,7 @@
         </ol>
     </section>
     <section class="tabs-content">
-        <section class="tabs-recommend">
+        <section class="tabs-recommend tabs-content-active">
             <div class="recommend-list">
                 <h2 class="tabs-title">推荐歌单</h2>
                 <ul>
@@ -77,14 +77,15 @@
                 </ul>
         </section>
         <section class="tabs-hotlist">
-
+            热歌榜
         </section>
         <section class="tabs-search">
-
+            搜索
         </section>
     </section>
 
     <script src="//at.alicdn.com/t/font_402066_pl7u2rbq34z5xw29.js"></script>
+    <script src="vendors/jquery.min.js"></script>
     <script src="vendors/av-min.js"></script>
     <script src="js/av.js"></script>
     <!--<script src="js/initSongs.js"></script>-->
@@ -117,7 +118,6 @@
                     `;
                     mHtml+=newSong_template;
                 }
-                console.log(mHtml);
                 $('.tabs-content>.tabs-recommend>.newest-list>ul').append(mHtml);
             }
 

@@ -70,6 +70,12 @@
 .tabs-content{
     margin-top: 109px;
 }
+.tabs-content>section{
+    display: none;
+}
+.tabs-content>section.tabs-content-active{
+    display: block;
+}
 .tabs-content .tabs-title{
     font-size: 17px;
     line-height: 20px;
