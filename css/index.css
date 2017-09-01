@@ -166,3 +166,28 @@
     width:22px;
     height: 22px;
 }
+.tabs-content>.tabs-recommend>.recommend-download{
+    background: transparent url("http://ov9xs8ajf.bkt.clouddn.com/recommand_bg_2x.png") no-repeat;
+    background-size: cover;
+    text-align: center;
+    padding:60px 0 19px;
+}
+.tabs-content>.tabs-recommend>.recommend-download>.footer-logo{
+    width: 230px;
+    height: 44px;
+}
+.tabs-content>.tabs-recommend>.recommend-download>a.footer-download{
+    display: block;
+    color: #D33A31;
+    font-size:16px;
+    line-height: 38px;
+    border:1px solid;
+    border-radius: 38px;
+    margin:15px 37px 5px;
+}
+.tabs-content>.tabs-recommend>.recommend-download>.copyright{
+    color: #888;
+    font-size: 12px;
+    line-height: 16px;
+    transform: scale(.75);
+}
