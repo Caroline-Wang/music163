@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>音乐播放页面</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/song.css">
+</head>
+<body>
+    <div class="content-wrapper">
+        <div class="background-image"></div>
+        <div class="content">
+            <section class="disk noCollapse">
+                <div class="circle">
+                    <img src="../img/夜曲.jpg" alt="">
+                </div>
+            </section>
+            <section class="lyrics">
+                <h3 class="title"><span class="song-name">夜曲</span>&nbsp;-&nbsp;<span class="singer">周杰伦</span></h3>
+                <ul class="lyrics-scroll">
+
+                </ul>
+            </section>
+            <section class="upload-btns">
+                <a href="#" class="open-app">打开</a>
+                <a href="#" class="download-app">下载</a>
+            </section>
+        </div>
+    </div>
+
+<script>
+    //使用rem
+    document.write(`
+        <style>
+            html{
+                font-size: ${document.body.clientWidth/10}px;
+            }
+        </style>
+    `);
+    console.log(document.body.clientHeight);
+</script>
+<script src="../vendors/jquery.min.js"></script>
+<script src="../vendors/av-min.js"></script>
+<script src="../js/av.js"></script>
+<script>
+    if(location.search.split('?').length){
+        let result=location.search.split('?')[1];
+        if(result.split('=')){
+            if(result.split('=')[0]==='id'){
+                let id=result.split('=')[1];
+                $('.lyrics ul.lyrics-scroll').empty();
+
+                //向后台请求该首歌曲的歌词和图片
+                let currentSong=new AV.Query('Song');
+                currentSong.get(id).then(function (result) {
+                    let songUrl=result.attributes.url;
+                    let currentLyrics=result.attributes.lyrics;
+                    //对歌词进行处理
+                    let timerArray=[];
+                    let lyricsHtml='';
+                    for(let i=0;i<currentLyrics.split('\n').length;i++){
+                        let currentLyricInfo=currentLyrics.split('\n')[i];
+                        let originTimer=currentLyricInfo.split(']')[0].substr(1);
+                        let formatedTimer=(+originTimer.split(':')[0])*60+(+originTimer.split(':')[1]);
+                        let lyricContent=currentLyricInfo.split(']')[1];
+                        let lyric_template=`
+                                <li>${lyricContent}</li>
+                            `;
+                        lyricsHtml+=lyric_template;
+                        timerArray.push(formatedTimer);
+                    }
+                    $('.lyrics ul.lyrics-scroll').append(lyricsHtml);
+
+                    //开始播放音乐，并显示对应歌词
+                    let video=document.createElement('video');
+                    video.src=songUrl;
+                    video.play();
+                    $('.lyrics ul.lyrics-scroll>li').eq(0).addClass('active');
+
+                    let currentIndex=0;
+                    let rotateCount=0;
+                    setInterval(function () {
+                        $('.disk>.circle').attr('style',`transform:rotateZ(${rotateCount*4}deg)`);
+                        rotateCount++;
+                        if(video.currentTime>timerArray[currentIndex+1]){
+                            $('.lyrics ul.lyrics-scroll>li').removeClass('active').eq(currentIndex+1).addClass('active');
+                            $('.lyrics ul.lyrics-scroll>li').attr('style',`transform:translateY(-${30*currentIndex}px)`);
+                            currentIndex++;
+                        }
+                    },200);
+
+//                    let timerLength=timerArray.length;
+//                    for(let i=0;i<timerLength;i++){
+//                        let timeInterval=timerArray.shift();
+//                        console.log(timeInterval);
+//                        setTimeout(function () {
+//                            console.log(`这是第${i}句！`);
+//                            console.log(timer);
+//                            $('.lyrics ul.lyrics-scroll>li').removeClass('active').eq(i).addClass('active');
+//                        },timer);
+//                    }
+                },function (error) {
+                    //异常处理
+                    alert(error);
+                })
+            }
+
+        }
+    }
+
+
+
+</script>
+</body>
+</html>
