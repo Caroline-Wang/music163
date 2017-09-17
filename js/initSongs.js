@@ -2,7 +2,7 @@
 //使用LeanCloud进行歌曲信息的初始化上传
 
 //创建歌曲信息数据
-//noinspection JSAnnotator
+noinspection JSAnnotator
 let songsInfo=[
     {
         singer:'薛之谦',
@@ -46,6 +46,50 @@ for(let i=0;i<songsInfo.length;i++){    //每一项为歌手和相应歌曲的�
 }
 console.log(songsList);
 AV.Object.saveAll(songsList).then(function(objects) {
+    console.log('初始化成功！');
+},function(error){
+    console.log('初始化失败！');
+});
+
+//创建歌单信息数据
+let songsCollection=[
+    {
+        title:"「想在秋天和你一起做的事情」",
+        image:"http://ov9xs8ajf.bkt.clouddn.com/%E6%AD%8C%E5%8D%95%E4%B8%80.jpg"
+    },
+    {
+        title:"avex 到底藏了多少动漫歌 ？",
+        image:"http://ov9xs8ajf.bkt.clouddn.com/%E6%AD%8C%E5%8D%95%E4%BA%8C.jpg"
+    },
+    {
+        title:"中文说唱及中国HipHop制作人采样探寻",
+        image:"http://ov9xs8ajf.bkt.clouddn.com/%E6%AD%8C%E5%8D%95%E4%B8%89.jpg"
+    },
+    {
+        title:"R&B柔情男嗓丨萦绕心间的温暖细腻",
+        image:"http://ov9xs8ajf.bkt.clouddn.com/%E6%AD%8C%E5%8D%95%E5%9B%9B.jpg"
+    },
+    {
+        title:"医生说我的抖腿已经无药可治了",
+        image:"http://ov9xs8ajf.bkt.clouddn.com/%E6%AD%8C%E5%8D%95%E4%BA%94.jpg"
+    },
+    {
+        title:"那些在你酩酊大醉后嘶吼出来的心事",
+        image:"http://ov9xs8ajf.bkt.clouddn.com/%E6%AD%8C%E5%8D%95%E5%85%AD.jpg"
+    }
+];
+
+var Collection = AV.Object.extend('Collection');
+var collectionList=[];
+for(let i=0;i<songsCollection.length;i++){    //每一项为歌手和相应歌曲的对象
+    let collection=songsCollection[i];
+    let collectionObject = new Collection();
+    collectionObject.set('title',collection["title"]);
+    collectionObject.set('image',collection["image"]);
+    collectionList.push(collectionObject)
+}
+console.log(collectionList);
+AV.Object.saveAll(collectionList).then(function(objects) {
     console.log('初始化成功！');
 },function(error){
     console.log('初始化失败！');

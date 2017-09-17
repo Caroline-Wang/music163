@@ -5,30 +5,33 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>音乐播放页面</title>
+    <title>音乐播放</title>
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/song.css">
 </head>
 <body>
-    <div class="content-wrapper">
-        <div class="background-image"></div>
-        <div class="content">
-            <section class="disk noCollapse">
-                <div class="circle">
-                    <img src="../img/夜曲.jpg" alt="">
-                </div>
-            </section>
-            <section class="lyrics">
-                <h3 class="title"><span class="song-name">夜曲</span>&nbsp;-&nbsp;<span class="singer">周杰伦</span></h3>
-                <ul class="lyrics-scroll">
+    <div class="background-image"></div>
+    <div class="content">
+        <section class="disk noCollapse">
+            <div class="circle">
+                <img src="" alt="">
+                <a href="#" class="play-btn">
+                    <svg class="icon svg-icon-music-play" aria-hidden="true">
+                        <use xlink:href="#icon-music-play"></use>
+                    </svg>
+                </a>
+            </div>
+        </section>
+        <section class="lyrics">
+            <h3 class="title"><span class="song-name"></span>&nbsp;-&nbsp;<span class="singer"></span></h3>
+            <ul class="lyrics-scroll">
 
-                </ul>
-            </section>
-            <section class="upload-btns">
-                <a href="#" class="open-app">打开</a>
-                <a href="#" class="download-app">下载</a>
-            </section>
-        </div>
+            </ul>
+        </section>
+        <section class="upload-btns">
+            <a href="#" class="open-app">打开</a>
+            <a href="#" class="download-app">下载</a>
+        </section>
     </div>
 
 <script>
@@ -40,8 +43,8 @@
             }
         </style>
     `);
-    console.log(document.body.clientHeight);
 </script>
+<script src="//at.alicdn.com/t/font_402066_lawssjbuz5q257b9.js"></script>
 <script src="../vendors/jquery.min.js"></script>
 <script src="../vendors/av-min.js"></script>
 <script src="../js/av.js"></script>
@@ -56,6 +59,13 @@
                 //向后台请求该首歌曲的歌词和图片
                 let currentSong=new AV.Query('Song');
                 currentSong.get(id).then(function (result) {
+                    //设置背景图片和唱片图片
+                    $('body>.background-image').css('background-image',`url(${result.attributes.image})`);
+                    $('.content .disk>.circle>img').attr('src',`${result.attributes.image}`);
+                    $('section.disk .circle>img').src=result.attributes.image;
+                    $('section.lyrics>.title>.song-name').text(result.attributes.name);
+                    $('section.lyrics>.title>.singer').text(result.attributes.singer);
+
                     let songUrl=result.attributes.url;
                     let currentLyrics=result.attributes.lyrics;
                     //对歌词进行处理
@@ -74,34 +84,31 @@
                     }
                     $('.lyrics ul.lyrics-scroll').append(lyricsHtml);
 
-                    //开始播放音乐，并显示对应歌词
-                    let video=document.createElement('video');
-                    video.src=songUrl;
-                    video.play();
-                    $('.lyrics ul.lyrics-scroll>li').eq(0).addClass('active');
+                    $(".disk>.circle>a.play-btn").trigger('click');
 
-                    let currentIndex=0;
-                    let rotateCount=0;
-                    setInterval(function () {
-                        $('.disk>.circle').attr('style',`transform:rotateZ(${rotateCount*4}deg)`);
-                        rotateCount++;
-                        if(video.currentTime>timerArray[currentIndex+1]){
-                            $('.lyrics ul.lyrics-scroll>li').removeClass('active').eq(currentIndex+1).addClass('active');
-                            $('.lyrics ul.lyrics-scroll>li').attr('style',`transform:translateY(-${30*currentIndex}px)`);
-                            currentIndex++;
-                        }
-                    },200);
+                    //点击“播放”按钮进行歌曲的播放
+                    $(".disk>.circle>a.play-btn").click(function () {
+                        $('.disk>.circle>.play-btn').hide();
 
-//                    let timerLength=timerArray.length;
-//                    for(let i=0;i<timerLength;i++){
-//                        let timeInterval=timerArray.shift();
-//                        console.log(timeInterval);
-//                        setTimeout(function () {
-//                            console.log(`这是第${i}句！`);
-//                            console.log(timer);
-//                            $('.lyrics ul.lyrics-scroll>li').removeClass('active').eq(i).addClass('active');
-//                        },timer);
-//                    }
+                        //开始播放音乐，并显示对应歌词
+                        let audio=document.createElement('audio');
+                        audio.src=songUrl;
+                        audio.play();
+                        $('.lyrics ul.lyrics-scroll>li').eq(0).addClass('active');
+
+                        let currentIndex=0;
+                        let rotateCount=0;
+                        setInterval(function () {
+                            $('.disk>.circle').attr('style',`transform:rotateZ(${rotateCount*4}deg)`);
+                            rotateCount++;
+                            if(audio.currentTime>timerArray[currentIndex+1]){
+                                $('.lyrics ul.lyrics-scroll>li').removeClass('active').eq(currentIndex+1).addClass('active');
+                                $('.lyrics ul.lyrics-scroll>li').attr('style',`transform:translateY(-${30*currentIndex}px)`);
+                                currentIndex++;
+                            }
+                        },200);
+                    });
+
                 },function (error) {
                     //异常处理
                     alert(error);

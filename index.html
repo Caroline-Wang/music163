@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <title>网易云音乐首页</title>
+    <title>网易云音乐</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/index.css">
 </head>
@@ -84,64 +84,23 @@
         <a class="download-app" href="#">下载APP</a>
     </section>
     <ol class="tabs">
-        <li class="recommend">
+        <li class="recommend tabs-active" data-init="true">
             <div class="txt-underline">推荐音乐</div>
         </li>
-        <li class="hot-list">
+        <li class="hot-list" data-init="false">
             <div class="txt-underline">热歌榜</div>
         </li>
-        <li class="search tabs-active">
+        <li class="search" data-init="false">
             <div class="txt-underline">搜索</div>
         </li>
     </ol>
 </section>
 <section class="tabs-content">
-    <section class="tabs-recommend">
+    <section class="tabs-recommend tabs-content-active">
         <div class="recommend-list">
             <h2 class="tabs-title">推荐歌单</h2>
-            <ul>
-                <li>
-                    <span class="listen-acount">217.9万</span>
-                    <img src="http://opjc44vzf.bkt.clouddn.com/17-8-27/31373864.jpg" alt="推荐歌单">
-                    <p class="txt-ellipsis">
-                        『华语』神道妖道人道，自求人间道gavgdnnk
-                    </p>
-                </li>
-                <li>
-                    <span class="listen-acount">217.9万</span>
-                    <img src="http://opjc44vzf.bkt.clouddn.com/17-8-27/31373864.jpg" alt="推荐歌单">
-                    <p class="txt-ellipsis">
-                        『华语』神道妖道人道，自求人间道gavgdnnk
-                    </p>
-                </li>
-                <li>
-                    <span class="listen-acount">217.9万</span>
-                    <img src="http://opjc44vzf.bkt.clouddn.com/17-8-27/31373864.jpg" alt="推荐歌单">
-                    <p class="txt-ellipsis">
-                        『华语』神道妖道人道，自求人间道gavgdnnk
-                    </p>
-                </li>
-                <li>
-                    <span class="listen-acount">217.9万</span>
-                    <img src="http://opjc44vzf.bkt.clouddn.com/17-8-27/31373864.jpg" alt="推荐歌单">
-                    <p class="txt-ellipsis">
-                        『华语』神道妖道人道，自求人间道gavgdnnk
-                    </p>
-                </li>
-                <li>
-                    <span class="listen-acount">217.9万</span>
-                    <img src="http://opjc44vzf.bkt.clouddn.com/17-8-27/31373864.jpg" alt="推荐歌单">
-                    <p class="txt-ellipsis">
-                        『华语』神道妖道人道，自求人间道gavgdnnk
-                    </p>
-                </li>
-                <li>
-                    <span class="listen-acount">217.9万</span>
-                    <img src="http://opjc44vzf.bkt.clouddn.com/17-8-27/31373864.jpg" alt="推荐歌单">
-                    <p class="txt-ellipsis">
-                        『华语』神道妖道人道，自求人间道gavgdnnk
-                    </p>
-                </li>
+            <ul class="songs-collection">
+
             </ul>
         </div>
         <div class="newest-list">
@@ -249,7 +208,7 @@
             <a href="#">查看完整榜单</a>
         </div>
     </section>
-    <section class="tabs-search tabs-content-active">
+    <section class="tabs-search">
         <div class="search">
             <div class="search-input-wrapper">
                 <svg class="icon svg-icon-search" aria-hidden="true">
@@ -264,16 +223,9 @@
         </div>
         <div class="search-default-show">
             <div class="search-hot">
+                <div class="uploader active"></div>
                 <h4>热门搜索</h4>
                 <ul class="search-hot-items">
-                    <li><a href="">薛之谦</a></li>
-                    <li><a href="">敦刻尔克</a></li>
-                    <li><a href="">Taylor Swift</a></li>
-                    <li><a href="">Maroon 5</a></li>
-                    <li><a href="">你的名字</a></li>
-                    <li><a href="">我的一个道姑朋友</a></li>
-                    <li><a href="">BLACKPINK</a></li>
-                    <li><a href="">周杰伦</a></li>
                 </ul>
             </div>
             <ul class="search-history"></ul>
@@ -292,121 +244,38 @@
     </section>
 </section>
 
-<script src="//at.alicdn.com/t/font_402066_4r7beb8ftzbk2o6r.js"></script>
+<script src="//at.alicdn.com/t/font_402066_lawssjbuz5q257b9.js"></script>
 <script src="vendors/jquery.min.js"></script>
 <script src="vendors/av-min.js"></script>
 <script src="js/av.js"></script>
 <!--<script src="js/initSongs.js"></script>-->
 <script>
+    //默认加载第一页
+    loadSongsCollection();
+    loadNewSongs();
+
     //切换tab键
     $('ol.tabs>li').click(function (e) {
         $currentTab = $(e.currentTarget);
         $currentTab.addClass('tabs-active').siblings('li').removeClass('tabs-active');
         let currentIndex = $currentTab.index();
         $('.tabs-content').children('section').eq(currentIndex).addClass('tabs-content-active').siblings('section').removeClass('tabs-content-active');
-    });
 
-    //加载最新音乐
-    var newestQuery = new AV.Query('Song');
-    newestQuery.addDescending('updatedAt');
-    newestQuery.limit(10);
-    newestQuery.find().then(function (results) {
-        $('.tabs-content>.tabs-recommend>.newest-list .uploader.active').removeClass('active');
-        if (results && results.length) {
-            let mHtml = '';
-            for (let i = 0; i < results.length; i++) {
-                let currentSong = results[i].attributes;
-                let newSong_template = `
-                    <li>
-                        <h3 class="song-name">${currentSong.name} </h3>
-                        <p class="song-infos">
-                            <svg class="icon svg-icon-sq" aria-hidden="true">
-                                <use xlink:href="#icon-sq"></use>
-                            </svg>
-                            <span class="song-singer">${currentSong.singer}</span>
-                            <span class="song-album">-&nbsp;${currentSong.album}</span>
-                        </p>
-                        <a href="#" class="play-btn">
-                            <svg class="icon svg-icon-play" aria-hidden="true">
-                                <use xlink:href="#icon-play"></use>
-                            </svg>
-                        </a>
-                    </li>
-                `;
-                mHtml += newSong_template;
+        //点击不同的tab，进行不同的页面初始化
+        if($currentTab.attr('data-init')==='false'){
+            switch(currentIndex){
+                case 0: //加载新歌榜
+                    loadNewSongs();
+                    break;
+                case 1: //加载热歌榜
+                    loadHotSongs();
+                    break;
+                case 2: //加载热门搜索
+                    loadHotSearch();
+                    break;
             }
-            $('.tabs-content>.tabs-recommend>.newest-list>ul').append(mHtml);
+            $currentTab.attr('data-init','true');
         }
-    }, function (error) {
-        console.log('查询失败！');
-        console.log(error);
-    });
-
-    //加载热歌榜音乐
-    var hotestQuery = new AV.Query('Song');
-    hotestQuery.equalTo('hot', true);
-    hotestQuery.limit(10);
-    hotestQuery.find().then(function (results) {
-        console.log(results);
-        $('.tabs-content>.tabs-hotlist>.uploader.active').removeClass('active');
-        if (results && results.length) {
-            let mHtml = '';
-            for (let i = 0; i < results.length; i++) {
-                //首先确定当前顺序
-                let cuurentOrder = '';
-                if (i < 9) {
-                    cuurentOrder = '0' + (i + 1);
-                } else {
-                    cuurentOrder = '' + (i + 1);
-                }
-                let currentSong = results[i].attributes;
-                let newSong_template = '';
-                if (i < 3) {
-                    newSong_template = `
-                            <li>
-                                <span class="song-order song-order-hotest">${cuurentOrder}</span>
-                                <h3 class="song-name">${currentSong.name} </h3>
-                                <p class="song-infos">
-                                    <svg class="icon svg-icon-sq" aria-hidden="true">
-                                        <use xlink:href="#icon-sq"></use>
-                                    </svg>
-                                    <span class="song-singer">${currentSong.singer}</span>
-                                    <span class="song-album">-&nbsp;${currentSong.album}</span>
-                                </p>
-                                <a href="#" class="play-btn">
-                                    <svg class="icon svg-icon-play" aria-hidden="true">
-                                        <use xlink:href="#icon-play"></use>
-                                    </svg>
-                                </a>
-                            </li>
-                        `;
-                } else {
-                    newSong_template = `
-                            <li>
-                                <span class="song-order">${cuurentOrder}</span>
-                                <h3 class="song-name">${currentSong.name} </h3>
-                                <p class="song-infos">
-                                    <svg class="icon svg-icon-sq" aria-hidden="true">
-                                        <use xlink:href="#icon-sq"></use>
-                                    </svg>
-                                    <span class="song-singer">${currentSong.singer}</span>
-                                    <span class="song-album">-&nbsp;${currentSong.album}</span>
-                                </p>
-                                <a href="#" class="play-btn">
-                                    <svg class="icon svg-icon-play" aria-hidden="true">
-                                        <use xlink:href="#icon-play"></use>
-                                    </svg>
-                                </a>
-                            </li>
-                        `;
-                }
-                mHtml += newSong_template;
-            }
-            $('.tabs-content>.tabs-hotlist>ol.song-list').append(mHtml);
-        }
-    }, function (error) {
-        console.log('查询失败！');
-        console.log(error);
     });
 
     //点击取消按钮删除搜索框内容
@@ -440,7 +309,6 @@
                 //初步筛选：去后台查询相应数据
                 fuzzyQuery(key,function (results) {
                     $('.tabs-content>.tabs-search .uploader.active').removeClass('active');
-                    console.log(results);
                     if (results && results.length) {
                         let resultArray=[];
                         for (let i = 0; i < results.length; i++) {
@@ -454,7 +322,6 @@
                             }
                         }
                         //剔除结果数组中的重复数据
-                        console.log(rmRepeatInArray(resultArray));
                         let mHtml = firstQuery_template(rmRepeatInArray(resultArray));
                         $('.tabs-content>.tabs-search .search-active-show>ul.search-related').append(mHtml);
                     }
@@ -479,39 +346,219 @@
         }
     });
 
+    //点击热门搜索进行搜索
+    $('.tabs-content>.tabs-search .search-hot ul.search-hot-items').on('click','li',function (e) {
+        let key=$(e.currentTarget).text();
+        //修改搜索框的样式
+        $('#search-key').val(key);
+        $('label[for="search-key"]').hide();
+        $('.search-input-wrapper .svg-icon-cancel').show();
+        $('.tabs-content>.tabs-search ul.search-history').append(searchHistory_template(key));
+
+        $('a.search-txt').trigger('click');
+    });
+
     //点击搜索“”，进入搜索结果列表页面
     $('a.search-txt').click(function () {
         if ($('#search-key').val() !== '') {
             let key = $('#search-key').val().trim();
 
-            $('.tabs-content>.tabs-search ul.search-history').append(`
-                <li>
-                    <svg class="icon svg-icon-history" aria-hidden="true">
-                        <use xlink:href="#icon-history"></use>
-                    </svg>
-                    <span>${key}</span>
-                    <svg class="icon svg-icon-cancel-simple" aria-hidden="true">
-                        <use xlink:href="#icon-cancel-simple"></use>
-                    </svg>
-                </li>
-            `);
+            $('.tabs-content>.tabs-search ul.search-history').append(searchHistory_template(key));
             $('.tabs-content>.tabs-search .search-default-show').hide();
             $('.tabs-content>.tabs-search>.search-active-show').hide();
             $('.tabs-content>.tabs-search .search-results>ul').html('');
             $('.tabs-content>.tabs-search .search-results').show();
 
             fuzzyQuery(key,function (results) {
-                console.log(results);
                 $('.tabs-content>.tabs-search .search-results>.uploader').removeClass('active');
 
                 //将结果加载至页面
                 if(results.length){
-                    let mHtml='';
-                    for(let i=0;i<results.length;i++){
-                        let currentSong=results[i].attributes;
+                    let mHtml=songListItem_template(results);
+                    $('.tabs-content>.tabs-search .search-results>ul').append(mHtml);
+                }
+            });
+        }
+    });
 
-                        let newSong_template = `
+    //点击音乐，跳转页面
+    $('.song-list').on('click','li',function (e) {
+        location.href='html/song.html?id='+$(e.currentTarget).attr('data-id');
+    });
+
+    //加载首页歌单
+    function loadSongsCollection() {
+        var collectionQuery = new AV.Query('Collection');
+        collectionQuery.addDescending('updatedAt');
+        collectionQuery.limit(6);
+        collectionQuery.find().then(function (results) {
+            if (results && results.length) {
+                let mHtml =songCollection_template(results);
+                $('.tabs-content>.tabs-recommend>.recommend-list>ul.songs-collection').append(mHtml);
+            }
+        }, function (error) {
+            console.log('查询失败！');
+            console.log(error);
+        });
+    }
+
+    
+    //加载最新音乐
+    function loadNewSongs(){
+        var newestQuery = new AV.Query('Song');
+        newestQuery.addDescending('updatedAt');
+        newestQuery.limit(10);
+        newestQuery.find().then(function (results) {
+            $('.tabs-content>.tabs-recommend>.newest-list .uploader.active').removeClass('active');
+            if (results && results.length) {
+                let mHtml =songListItem_template(results);
+                $('.tabs-content>.tabs-recommend>.newest-list>ul').append(mHtml);
+            }
+        }, function (error) {
+            console.log('查询失败！');
+            console.log(error);
+        });
+    }
+
+    //加载热歌榜音乐
+    function loadHotSongs() {
+        var hotestQuery = new AV.Query('Song');
+        hotestQuery.equalTo('hot', true);
+        hotestQuery.limit(10);
+        hotestQuery.find().then(function (results) {
+            $('.tabs-content>.tabs-hotlist>.uploader.active').removeClass('active');
+            if (results && results.length) {
+                let mHtml = songWithOrder_template(results);
+                $('.tabs-content>.tabs-hotlist>ol.song-list').append(mHtml);
+            }
+        }, function (error) {
+            console.log('查询失败！');
+            console.log(error);
+        });
+    }
+
+    //加载热门搜索
+    function loadHotSearch() {
+        var hotestSearch = new AV.Query('Song');
+        hotestSearch.equalTo('hot', true);
+        hotestSearch.limit(8);
+        hotestSearch.find().then(function (results) {
+            if (results && results.length) {
+                let resultArray=[];
+                for (let i = 0; i < results.length; i++) {
+                    let currentSong = results[i].attributes;
+                    for (let item in currentSong) {
+                        if (item==="singer" || item==='name'){   //匹配则进行显示
+                            resultArray.push(currentSong[item].trim());
+                        }
+                    }
+                }
+                //剔除结果数组中的重复数据
+                let mHtml = hotSearch_template(rmRepeatInArray(resultArray));
+                $('.tabs-content>.tabs-search .search-hot>.search-hot-items').html(mHtml);
+                $('.tabs-content>.tabs-search .search-hot>.uploader.active').removeClass('active');
+            }
+        }, function (error) {
+            console.log('查询失败！');
+            console.log(error);
+        });
+    }
+
+    //推荐歌单模板，包含标题、图片、在听人数,传入对象数组，返回组装好的HTML字符串
+    function songCollection_template(results){
+        if(results instanceof Array){   //传入的是数组
+            if (results.length) {
+                let mHtml = '';
+                for (let i = 0; i < results.length; i++) {
+                    let currentSong = results[i].attributes;
+                    let listenAmount=results[i].attributes["listenAmount"];
+                    if(listenAmount>=10000){
+                        listenAmount=(listenAmount/10000).toFixed(1)+'万';
+                    }
+                    let song_template = `
+                        <li>
+                            <span class="listen-acount">${listenAmount}</span>
+                            <img src="${results[i].attributes["image"]}" alt="推荐歌单">
+                            <p class="txt-ellipsis">
+                                ${results[i].attributes["title"]}
+                            </p>
+                        </li>
+                    `;
+                    mHtml += song_template;
+                }
+                return mHtml;
+            }
+        }
+    }
+
+    //歌曲列表模板，包含歌曲名称、歌手、专辑和播放按钮,传入单个对象或对象数组，返回组装好的HTML字符串
+    function songListItem_template(results){
+        if(results instanceof Array){   //传入的是数组
+            if (results.length) {
+                let mHtml = '';
+                for (let i = 0; i < results.length; i++) {
+                    let currentSong = results[i].attributes;
+                    let song_template = `
+                        <li data-id=${results[i].id}>
+                        <h3 class="song-name">${currentSong.name} </h3>
+                            <p class="song-infos">
+                                <svg class="icon svg-icon-sq" aria-hidden="true">
+                                    <use xlink:href="#icon-sq"></use>
+                                </svg>
+                                <span class="song-singer">${currentSong.singer}</span>
+                                <span class="song-album">-&nbsp;${currentSong.album}</span>
+                            </p>
+                            <a href="#" class="play-btn">
+                                <svg class="icon svg-icon-play" aria-hidden="true">
+                                    <use xlink:href="#icon-play"></use>
+                                </svg>
+                            </a>
+                        </li>
+                    `;
+                    mHtml += song_template;
+                }
+                return mHtml;
+            }
+        }else{
+            let currentSong = results.attributes;
+            return `
+                <li data-id=${results.id}>
+                    <h3 class="song-name">${currentSong.name} </h3>
+                    <p class="song-infos">
+                        <svg class="icon svg-icon-sq" aria-hidden="true">
+                            <use xlink:href="#icon-sq"></use>
+                        </svg>
+                        <span class="song-singer">${currentSong.singer}</span>
+                        <span class="song-album">-&nbsp;${currentSong.album}</span>
+                    </p>
+                    <a href="#" class="play-btn">
+                        <svg class="icon svg-icon-play" aria-hidden="true">
+                            <use xlink:href="#icon-play"></use>
+                        </svg>
+                    </a>
+                </li>
+            `;
+        }
+    }
+
+    //包含序号的歌曲列表模板，包含歌曲序号、歌曲名称、歌手、专辑和播放按钮，传入对象数组，返回组装好的HTML字符串
+    function songWithOrder_template(results) {
+        if (results && results.length) {
+            let mHtml = '';
+            for (let i = 0; i < results.length; i++) {
+                //首先确定当前顺序
+                let currentOrder = '';
+                if (i < 9) {
+                    currentOrder = '0' + (i + 1);
+                } else {
+                    currentOrder = '' + (i + 1);
+                }
+                let currentSong = results[i].attributes;
+                let newSong_template = '';
+                if (i < 3) {
+                    newSong_template = `
                             <li data-id=${results[i].id}>
+                                <span class="song-order song-order-hotest">${currentOrder}</span>
                                 <h3 class="song-name">${currentSong.name} </h3>
                                 <p class="song-infos">
                                     <svg class="icon svg-icon-sq" aria-hidden="true">
@@ -527,37 +574,45 @@
                                 </a>
                             </li>
                         `;
-                        mHtml+=newSong_template;
-                    }
-                    $('.tabs-content>.tabs-search .search-results>ul').append(mHtml);
+                } else {
+                    newSong_template = `
+                            <li data-id=${results[i].id}>
+                                <span class="song-order">${currentOrder}</span>
+                                <h3 class="song-name">${currentSong.name} </h3>
+                                <p class="song-infos">
+                                    <svg class="icon svg-icon-sq" aria-hidden="true">
+                                        <use xlink:href="#icon-sq"></use>
+                                    </svg>
+                                    <span class="song-singer">${currentSong.singer}</span>
+                                    <span class="song-album">-&nbsp;${currentSong.album}</span>
+                                </p>
+                                <a href="#" class="play-btn">
+                                    <svg class="icon svg-icon-play" aria-hidden="true">
+                                        <use xlink:href="#icon-play"></use>
+                                    </svg>
+                                </a>
+                            </li>
+                        `;
                 }
-            });
-        }
-    });
-
-    //点击音乐，跳转页面
-    $('.song-list').on('click','li',function (e) {
-        console.log('开始播放这首歌！');
-        location.href='html/song.html?id='+$(e.currentTarget).attr('data-id');
-    });
-
-
-
-    //剔除数组中的重复数据，并返回该数组
-    function rmRepeatInArray(array){
-        if(array && array instanceof Array && array.length){
-            let resultArray=[];
-            resultArray.push(array[0]);
-            for(let i=0;i<array.length;i++){
-                let flag=true;
-                for(let j=0;j<resultArray.length;j++){
-                    if(resultArray[j]===array[i]){
-                        flag=false;
-                    }
-                }
-                if(flag) resultArray.push(array[i]);
+                mHtml += newSong_template;
             }
-            return resultArray;
+            return mHtml;
+        }
+    }
+
+    //热门搜索模板
+    function hotSearch_template(results){
+        if(results instanceof Array){   //传入的是数组
+            if (results.length) {
+                let mHtml = '';
+                for (let i = 0; i < results.length; i++) {
+                    let search_template = `
+                        <li><a href="#">${results[i]}</a></li>
+                    `;
+                    mHtml += search_template;
+                }
+                return mHtml;
+            }
         }
     }
 
@@ -586,6 +641,60 @@
                 mHtml+=template;
             }
             return mHtml;
+        }
+    }
+
+    //搜索历史模板,可传入单个字符串或字符串数组
+    function searchHistory_template(keys){
+        if(keys instanceof Array){   //传入的是数组
+            if (keys.length) {
+                let mHtml = '';
+                for (let i = 0; i < keys.length; i++) {
+                    let search_template = `
+                        <li>
+                            <svg class="icon svg-icon-history" aria-hidden="true">
+                                <use xlink:href="#icon-history"></use>
+                            </svg>
+                            <span>${keys[i]}</span>
+                            <svg class="icon svg-icon-cancel-simple" aria-hidden="true">
+                                <use xlink:href="#icon-cancel-simple"></use>
+                            </svg>
+                        </li>
+                    `;
+                    mHtml += search_template;
+                }
+                return mHtml;
+            }
+        }else{   //传入的是字符串
+            return `
+                <li>
+                    <svg class="icon svg-icon-history" aria-hidden="true">
+                        <use xlink:href="#icon-history"></use>
+                    </svg>
+                    <span>${keys}</span>
+                    <svg class="icon svg-icon-cancel-simple" aria-hidden="true">
+                        <use xlink:href="#icon-cancel-simple"></use>
+                    </svg>
+                </li>
+            `;
+        }
+    }
+
+    //剔除数组中的重复数据，并返回该数组
+    function rmRepeatInArray(array){
+        if(array && array instanceof Array && array.length){
+            let resultArray=[];
+            resultArray.push(array[0]);
+            for(let i=0;i<array.length;i++){
+                let flag=true;
+                for(let j=0;j<resultArray.length;j++){
+                    if(resultArray[j]===array[i]){
+                        flag=false;
+                    }
+                }
+                if(flag) resultArray.push(array[i]);
+            }
+            return resultArray;
         }
     }
 
