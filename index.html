@@ -391,9 +391,19 @@
         collectionQuery.addDescending('updatedAt');
         collectionQuery.limit(6);
         collectionQuery.find().then(function (results) {
+            console.log('结果出来了！！');
             if (results && results.length) {
                 let mHtml =songCollection_template(results);
                 $('.tabs-content>.tabs-recommend>.recommend-list>ul.songs-collection').append(mHtml);
+                //将原图加载到页面
+                for(let i=0;i<$('.tabs-recommend>.recommend-list>ul.songs-collection>li').length;i++){
+                    let $currentImage=$('.tabs-recommend>.recommend-list>ul.songs-collection>li').eq(i).find('img[data-src]');
+                    let temp_img=new Image();
+                    temp_img.src=$currentImage.attr('data-src');
+                    temp_img.onload=function () {
+                        $currentImage.attr('src',temp_img.src);
+                    };
+                }
             }
         }, function (error) {
             console.log('查询失败！');
@@ -477,7 +487,7 @@
                     let song_template = `
                         <li>
                             <span class="listen-acount">${listenAmount}</span>
-                            <img src="${results[i].attributes["image"]}" alt="推荐歌单">
+                            <img src="${results[i].attributes["thumbnails"]}" data-src="${results[i].attributes["image"]}" alt="推荐歌单">
                             <p class="txt-ellipsis">
                                 ${results[i].attributes["title"]}
                             </p>
