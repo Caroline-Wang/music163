@@ -5,19 +5,29 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-touch-fullscreen" content="yes" />
     <title>音乐播放</title>
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/song.css">
 </head>
 <body>
-    <div class="background-image"></div>
+    <div class="bg-wrapper">
+        <div class="background-image"></div>
+    </div>
+
     <div class="content">
         <section class="disk noCollapse">
             <div class="circle">
                 <img src="" alt="">
-                <a href="#" class="play-btn">
+                <a href="#" class="play-btn play-btn-play ">
                     <svg class="icon svg-icon-music-play" aria-hidden="true">
                         <use xlink:href="#icon-music-play"></use>
+                    </svg>
+                </a>
+                <a href="#" class="play-btn play-btn-pause" style="display:none;">
+                    <svg class="icon svg-icon-music-pause" aria-hidden="true">
+                        <use xlink:href="#icon-music-pause"></use>
                     </svg>
                 </a>
             </div>
@@ -34,6 +44,7 @@
         </section>
     </div>
 
+
 <script>
     //使用rem
     document.write(`
@@ -44,80 +55,107 @@
         </style>
     `);
 </script>
-<script src="//at.alicdn.com/t/font_402066_lawssjbuz5q257b9.js"></script>
+<script src="//at.alicdn.com/t/font_402066_akmkej0132dwjyvi.js"></script>
 <script src="../vendors/jquery.min.js"></script>
 <script src="../vendors/av-min.js"></script>
 <script src="../js/av.js"></script>
 <script>
-    if(location.search.split('?').length){
-        let result=location.search.split('?')[1];
-        if(result.split('=')){
-            if(result.split('=')[0]==='id'){
-                let id=result.split('=')[1];
-                $('.lyrics ul.lyrics-scroll').empty();
+    //歌曲地址
+    let songUrl='';
+    //歌词时间列表
+    let timerArray=[];
+    //播放歌曲的audio信息
+    let audio=document.createElement('audio');
+    let currentIndex=0;
+    let rotateCount=0;
+    let timer=null;
+    initSong(location);
 
-                //向后台请求该首歌曲的歌词和图片
-                let currentSong=new AV.Query('Song');
-                currentSong.get(id).then(function (result) {
-                    //设置背景图片和唱片图片
-                    $('body>.background-image').css('background-image',`url(${result.attributes.image})`);
-                    $('.content .disk>.circle>img').attr('src',`${result.attributes.image}`);
-                    $('section.disk .circle>img').src=result.attributes.image;
-                    $('section.lyrics>.title>.song-name').text(result.attributes.name);
-                    $('section.lyrics>.title>.singer').text(result.attributes.singer);
+    $('.lyrics ul.lyrics-scroll>li').eq(0).addClass('active');
+    $(".disk>.circle>a.play-btn-play").trigger('click');
 
-                    let songUrl=result.attributes.url;
-                    let currentLyrics=result.attributes.lyrics;
-                    //对歌词进行处理
-                    let timerArray=[];
-                    let lyricsHtml='';
-                    for(let i=0;i<currentLyrics.split('\n').length;i++){
-                        let currentLyricInfo=currentLyrics.split('\n')[i];
-                        let originTimer=currentLyricInfo.split(']')[0].substr(1);
-                        let formatedTimer=(+originTimer.split(':')[0])*60+(+originTimer.split(':')[1]);
-                        let lyricContent=currentLyricInfo.split(']')[1];
-                        let lyric_template=`
-                                <li>${lyricContent}</li>
-                            `;
-                        lyricsHtml+=lyric_template;
-                        timerArray.push(formatedTimer);
-                    }
-                    $('.lyrics ul.lyrics-scroll').append(lyricsHtml);
+    //点击“播放”按钮进行歌曲的播放
+    $(".disk>.circle>a.play-btn-play").click(function () {
+        $('.disk>.circle>a.play-btn-play').hide();
+        $('.disk>.circle>a.play-btn-pause').show();
 
-                    $(".disk>.circle>a.play-btn").trigger('click');
-
-                    //点击“播放”按钮进行歌曲的播放
-                    $(".disk>.circle>a.play-btn").click(function () {
-                        $('.disk>.circle>.play-btn').hide();
-
-                        //开始播放音乐，并显示对应歌词
-                        let audio=document.createElement('audio');
-                        audio.src=songUrl;
-                        audio.play();
-                        $('.lyrics ul.lyrics-scroll>li').eq(0).addClass('active');
-
-                        let currentIndex=0;
-                        let rotateCount=0;
-                        setInterval(function () {
-                            $('.disk>.circle').attr('style',`transform:rotateZ(${rotateCount*4}deg)`);
-                            rotateCount++;
-                            if(audio.currentTime>timerArray[currentIndex+1]){
-                                $('.lyrics ul.lyrics-scroll>li').removeClass('active').eq(currentIndex+1).addClass('active');
-                                $('.lyrics ul.lyrics-scroll>li').attr('style',`transform:translateY(-${30*currentIndex}px)`);
-                                currentIndex++;
-                            }
-                        },200);
-                    });
-
-                },function (error) {
-                    //异常处理
-                    alert(error);
-                })
+        //开始播放音乐，并显示对应歌词
+        audio.play();
+        timer=setInterval(function () {
+            $('.disk>.circle').attr('style',`transform:rotateZ(${rotateCount*4}deg)`);
+            rotateCount++;
+            if(audio.currentTime>timerArray[currentIndex+1]){
+                console.log('下一句！');
+                $('.lyrics ul.lyrics-scroll>li').removeClass('active').eq(currentIndex+1).addClass('active');
+                $('.lyrics ul.lyrics-scroll>li').attr('style',`transform:translateY(-${30*currentIndex}px)`);
+                currentIndex++;
             }
+            if(audio.ended){
+                $('.disk>.circle>a.play-btn-pause').hide();
+                $('.disk>.circle>a.play-btn-play').show();
+                currentIndex=0;
+                clearInterval(timer);
+            }
+        },200);
+    });
 
+    //点击“暂停”按钮进行歌曲的播放
+    $(".disk>.circle>a.play-btn-pause").click(function () {
+        $('.disk>.circle>a.play-btn-pause').hide();
+        $('.disk>.circle>a.play-btn-play').show();
+
+        audio.pause();
+        clearInterval(timer);
+    });
+
+    function initSong(location) {
+        if(location.search.split('?').length){
+            let result=location.search.split('?')[1];
+            if(result.split('=')){
+                if(result.split('=')[0]==='id'){
+                    let id=result.split('=')[1];
+                    $('.lyrics ul.lyrics-scroll').empty();
+
+                    //向后台请求该首歌曲的歌词和图片
+                    let currentSong=new AV.Query('Song');
+                    currentSong.get(id).then(function (result) {
+                        //设置背景图片和唱片图片
+                        $('.background-image').css('background-image',`url(${result.attributes.image})`);
+                        $('.content .disk>.circle>img').attr('src',`${result.attributes.image}`);
+                        $('section.disk .circle>img').src=result.attributes.image;
+                        $('section.lyrics>.title>.song-name').text(result.attributes.name);
+                        $('section.lyrics>.title>.singer').text(result.attributes.singer);
+
+                        songUrl=result.attributes.url;
+                        audio.src=songUrl;
+                        let currentLyrics=result.attributes.lyrics;
+
+                        //对歌词进行处理
+                        let lyricsHtml='';
+                        for(let i=0;i<currentLyrics.split('\n').length;i++){
+                            let currentLyricInfo=currentLyrics.split('\n')[i];
+                            console.log(currentLyricInfo);
+                            let originTimer=currentLyricInfo.split(']')[0].substr(1);
+                            let formatedTimer=(+originTimer.split(':')[0])*60+(+originTimer.split(':')[1]);
+                            let lyricContent=currentLyricInfo.split(']')[1];
+                            let lyric_template='';
+                            if(lyricContent){
+                                lyric_template=`
+                                    <li>${lyricContent}</li>
+                                `;
+                            }
+                            lyricsHtml+=lyric_template;
+                            timerArray.push(formatedTimer);
+                        }
+                        $('.lyrics ul.lyrics-scroll').append(lyricsHtml);
+                    },function (error) {
+                        //异常处理
+                        alert(error);
+                    })
+                }
+            }
         }
     }
-
 
 
 </script>
